@@ -7,13 +7,16 @@ import {
   fetchLogInWithToken,
 } from "./userAPI";
 
+const LOADING = "loading";
+const IDLE = "idle";
+
 const initialState = {
   auth_token: null,
   data: {
     id: null,
     email: null,
   },
-  status: "idle",
+  status: IDLE,
 };
 
 export const registerUserAsync = createAsyncThunk(
@@ -36,7 +39,7 @@ export const logOutUserAsync = createAsyncThunk(
   "user/fetchLogOut",
   async (state) => {
     const response = await fetchLogOut(state);
-    return response;
+    return response.data;
   }
 );
 
@@ -53,50 +56,40 @@ export const logInUserWithTokenAsync = createAsyncThunk(
 export const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {
-    increment: (state) => {
-      state.value += 1;
-    },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    incrementByAmount: (state, action) => {
-      state.value += action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(registerUserAsync.pending, (state) => {
-        state.status = "loading";
+        state.status = LOADING;
       })
       .addCase(registerUserAsync.fulfilled, (state, action) => {
-        state.status = "idle";
+        state.status = IDLE;
         state.data = action.payload.data.user;
         state.auth_token = action.payload.headers.authorization;
         localStorage.setItem("auth_token", state.auth_token);
       })
       .addCase(logInUserAsync.pending, (state) => {
-        state.status = "loading";
+        state.status = LOADING;
       })
       .addCase(logInUserAsync.fulfilled, (state, action) => {
-        state.status = "idle";
+        state.status = IDLE;
         state.data = action.payload.data.user;
         state.auth_token = action.payload.headers.authorization;
         localStorage.setItem("auth_token", state.auth_token);
       })
       .addCase(logOutUserAsync.pending, (state) => {
-        state.status = "loading";
+        state.status = LOADING;
       })
       .addCase(logOutUserAsync.fulfilled, (state) => {
-        state.data = initialState.user;
+        state.data = initialState.data;
         state.auth_token = initialState.auth_token;
         localStorage.removeItem("auth_token");
       })
       .addCase(logInUserWithTokenAsync.pending, (state) => {
-        state.status = "loading";
+        state.status = LOADING;
       })
       .addCase(logInUserWithTokenAsync.fulfilled, (state, action) => {
-        state.status = "idle";
+        state.status = IDLE;
         state.data = action.payload.data;
         state.auth_token = localStorage.getItem("auth_token");
       });
@@ -113,14 +106,5 @@ export const isLoggedIn = (state) => {
     state.auth_token == null || state.auth_token === JSON.stringify(null);
   return !loggedOut;
 };
-
-// We can also write thunks by hand, which may contain both sync and async logic.
-// Here's an example of conditionally dispatching actions based on current state.
-// export const incrementIfOdd = (amount) => (dispatch, getState) => {
-//   const currentValue = selectCount(getState());
-//   if (currentValue % 2 === 1) {
-//     dispatch(incrementByAmount(amount));
-//   }
-// };
 
 export default userSlice.reducer;
