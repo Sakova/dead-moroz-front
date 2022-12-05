@@ -15,10 +15,10 @@ const root = createRoot(container);
 let localAuthToken = localStorage.auth_token;
 let cookieExists = localAuthToken !== "undefined" && localAuthToken !== null;
 if (cookieExists) {
-  const auth_token = localStorage.getItem("auth_token");
-  const authTokenExists = auth_token !== "undefined" && localAuthToken !== null;
+  const authToken = localStorage.getItem("auth_token");
+  const authTokenExists = authToken !== "undefined" && localAuthToken !== null;
   if (authTokenExists) {
-    store.dispatch(logInUserWithTokenAsync(auth_token));
+    store.dispatch(logInUserWithTokenAsync(authToken));
   }
 }
 
