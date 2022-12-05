@@ -1,9 +1,20 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+const request = async (config) => {
+  const result = await axios(config)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return result;
+}
 
 export async function fetchCreateUser(data) {
-  let config = {
+  const config = {
     method: "post",
     url: `${BASE_URL}/users`,
     headers: {
@@ -17,18 +28,11 @@ export async function fetchCreateUser(data) {
     },
   };
 
-  let result = await axios(config)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  return result;
+  return request(config);
 }
 
 export async function fetchLogIn(data) {
-  let config = {
+  const config = {
     method: "post",
     url: `${BASE_URL}/users/sign_in`,
     headers: {
@@ -43,18 +47,11 @@ export async function fetchLogIn(data) {
     },
   };
 
-  let result = await axios(config)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  return result;
+  return request(config);
 }
 
 export async function fetchLogOut(state) {
-  let config = {
+  const config = {
     method: "delete",
     url: `${BASE_URL}/users/sign_out`,
     headers: {
@@ -62,18 +59,11 @@ export async function fetchLogOut(state) {
     },
   };
 
-  let result = await axios(config)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  return result;
+  return request(config);
 }
 
 export async function fetchLogInWithToken(token) {
-  let config = {
+  const config = {
     method: "get",
     url: `${BASE_URL}/member-data`,
     headers: {
@@ -81,12 +71,5 @@ export async function fetchLogInWithToken(token) {
     },
   };
 
-  let result = await axios(config)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  return result;
+  return request(config);
 }
