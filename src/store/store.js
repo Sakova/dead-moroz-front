@@ -1,23 +1,23 @@
 import { configureStore } from "@reduxjs/toolkit";
-import counterReducer from "./counter/counterSlice";
+import registrationReducer from "./registration/registrationSlice";
 import userReducer from "./user/userSlice";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     user: userReducer,
+    registration: registrationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore these action types
         ignoredActions: [
           "user/fetchLogInWithToken/fulfilled",
           "user/fetchLogIn/fulfilled",
+          "user/fetchRegisterUser/fulfilled",
+          "user/fetchUpdateUser/fulfilled",
+          "user/fetchUpdateUser/pending",
         ],
-        // Ignore these field paths in all actions
         ignoredActionPaths: [],
-        // Ignore these paths in the state
         ignoredPaths: [],
       },
     }),

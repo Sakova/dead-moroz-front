@@ -5,6 +5,8 @@ import {
   fetchLogIn,
   fetchLogOut,
   fetchLogInWithToken,
+  fetchRandomAvatar,
+  fetchUpdateUser,
 } from "./userAPI";
 
 const LOADING = "loading";
@@ -15,6 +17,7 @@ const initialState = {
   data: {
     id: null,
     email: null,
+    avatar: null,
   },
   status: IDLE,
 };
@@ -47,8 +50,22 @@ export const logInUserWithTokenAsync = createAsyncThunk(
   "user/fetchLogInWithToken",
   async (token) => {
     const response = await fetchLogInWithToken(token);
-    // The value we return becomes the `fulfilled` action payload
-    console.log(response);
+    return response;
+  }
+);
+
+export const getRandomAvatarAsync = createAsyncThunk(
+  "user/fetchRandomAvatar",
+  async () => {
+    const response = await fetchRandomAvatar();
+    return response.data;
+  }
+);
+
+export const updateUserAsync = createAsyncThunk(
+  "user/fetchUpdateUser",
+  async (data) => {
+    const response = await fetchUpdateUser(data);
     return response;
   }
 );
@@ -90,21 +107,40 @@ export const userSlice = createSlice({
       })
       .addCase(logInUserWithTokenAsync.fulfilled, (state, action) => {
         state.status = IDLE;
-        state.data = action.payload.data;
-        state.auth_token = localStorage.getItem("auth_token");
+        if (action.payload === undefined) {
+          state.auth_token = initialState.auth_token;
+          localStorage.removeItem("auth_token");
+        } else {
+          state.data = action.payload?.data;
+          state.auth_token = localStorage.getItem("auth_token");
+        }
+      })
+      .addCase(getRandomAvatarAsync.pending, (state) => {
+        state.status = LOADING;
+      })
+      .addCase(getRandomAvatarAsync.fulfilled, (state, action) => {
+        state.status = IDLE;
+        state.data.avatar = action.payload;
+      })
+      .addCase(updateUserAsync.pending, (state) => {
+        state.status = LOADING;
+      })
+      .addCase(updateUserAsync.fulfilled, (state, action) => {
+        state.status = IDLE;
+        state.data = action.payload.data.user;
       });
   },
 });
 
 export const { increment, decrement, incrementByAmount } = userSlice.actions;
 
-export const selectAuthToken = (state) => state.auth_token;
-export const selectUserEmail = (state) => state.user.email;
+export const selectAuthToken = (state) => state.user?.auth_token;
+export const selectUserEmail = (state) => state.user?.email;
 export const selectUserID = (state) => state.user?.id;
-export const isLoggedIn = (state) => {
-  const loggedOut =
-    state.auth_token == null || state.auth_token === JSON.stringify(null);
-  return !loggedOut;
+export const selectUser = (state) => state.user?.data;
+export const isLoggedOut = (state) => {
+  return state.user.auth_token == null;
 };
+export const selectAvatar = (state) => state.user?.data?.avatar;
 
 export default userSlice.reducer;
