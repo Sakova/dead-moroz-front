@@ -35,15 +35,13 @@ const SignIn = () => {
     setFormFields(defaultFormFields);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const dis = dispatch(logInUserAsync({ email, password }));
-    dis.then((res) => {
-      if (res.type === "user/fetchLogIn/fulfilled") {
-        resetFormFields();
-        navigate("/");
-      }
-    });
+    const result = await dispatch(logInUserAsync({ email, password }));
+    if (result.type === "user/fetchLogIn/fulfilled") {
+      resetFormFields();
+      navigate("/");
+    }
   };
 
   const handleChange = (event) => {
