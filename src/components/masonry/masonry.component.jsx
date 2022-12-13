@@ -18,6 +18,7 @@ const MasonryItems = ({ item, index }) => {
     const value = parseInt(item.target.outerHTML.match(/value="(\d)/)[1]);
     dispatch(deleteItem(value));
   };
+
   return (
     <Item value={index} onClick={removeItem} sx={{ overflow: "hidden" }}>
       {item}
