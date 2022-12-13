@@ -14,7 +14,7 @@ import {
 import { selectAuthToken, updateUserAsync } from "../../store/user/userSlice";
 import { useNavigate } from "react-router-dom";
 
-const steps = [
+const STEPS = [
   {
     label: 'Enter your email and password',
     description: `To access the application, you first need to register (enter your email and password).
@@ -50,7 +50,7 @@ const SignUpBar = () => {
   return (
     <Box sx={{ maxWidth: 400, marginTop: 14, marginLeft: "auto" }}>
       <Stepper activeStep={activeStep} orientation="vertical">
-        {steps.map((step, index) => (
+        {STEPS.map((step, index) => (
           <Step key={step.label}>
             <StepLabel
               optional={
@@ -78,7 +78,7 @@ const SignUpBar = () => {
           </Step>
         ))}
       </Stepper>
-      {activeStep === steps.length && (
+      {activeStep === STEPS.length && (
         <Paper square elevation={0} sx={{ p: 3 }}>
           <Typography>All steps completed - you&apos;re finished</Typography>
         </Paper>
