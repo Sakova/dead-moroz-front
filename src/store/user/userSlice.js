@@ -81,7 +81,7 @@ export const userSlice = createSlice({
       })
       .addCase(registerUserAsync.fulfilled, (state, action) => {
         state.status = IDLE;
-        state.data = action.payload.data.user;
+        state.data = action.payload.data;
         state.auth_token = action.payload.headers.authorization;
         localStorage.setItem("auth_token", state.auth_token);
       })
@@ -90,7 +90,7 @@ export const userSlice = createSlice({
       })
       .addCase(logInUserAsync.fulfilled, (state, action) => {
         state.status = IDLE;
-        state.data = action.payload.data.user;
+        state.data = action.payload.data;
         state.auth_token = action.payload.headers.authorization;
         localStorage.setItem("auth_token", state.auth_token);
       })
@@ -127,7 +127,7 @@ export const userSlice = createSlice({
       })
       .addCase(updateUserAsync.fulfilled, (state, action) => {
         state.status = IDLE;
-        state.data = action.payload.data.user;
+        state.data = action.payload.data;
       });
   },
 });
