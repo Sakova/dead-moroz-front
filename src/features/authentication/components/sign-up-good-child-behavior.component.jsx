@@ -5,10 +5,10 @@ import {
   addItem,
   selectItems,
   selectPhoto,
-} from "../../store/registration/registrationSlice";
-import SnackbarMessage from "../snackbar/snackbar-message.component";
+} from "../../../store/registration/registrationSlice";
+import SnackbarMessage from "../../../components/snackbar/snackbar-message.component";
 
-import MasonryItems from "../masonry/masonry.component";
+import MasonryItems from "../../../components/masonry/masonry.component";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
@@ -17,7 +17,7 @@ import Masonry from "@mui/lab/Masonry";
 
 const defaultFormField = "";
 
-const SignUpGoodChildBehavior = () => {
+export const SignUpGoodChildBehavior = () => {
   const dispatch = useDispatch();
   const [formField, setFormField] = useState(defaultFormField);
   const item = formField;
@@ -97,5 +97,3 @@ const SignUpGoodChildBehavior = () => {
     </Box>
   );
 };
-
-export default SignUpGoodChildBehavior;

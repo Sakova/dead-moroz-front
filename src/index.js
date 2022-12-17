@@ -7,7 +7,7 @@ import { logInUserWithTokenAsync } from "./store/user/userSlice";
 import { store } from "./store/store";
 import { router } from "./App";
 
-import "./index.css";
+import "./assets/index.css";
 
 let localAuthToken = localStorage.auth_token;
 let cookieExists = localAuthToken !== undefined && localAuthToken !== null;

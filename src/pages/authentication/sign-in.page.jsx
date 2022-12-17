@@ -25,7 +25,7 @@ const defaultFormFields = {
   password: "",
 };
 
-const SignIn = () => {
+export const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formFields, setFormFields] = useState(defaultFormFields);
@@ -134,5 +134,3 @@ const SignIn = () => {
     </ThemeProvider>
   );
 };
-
-export default SignIn;

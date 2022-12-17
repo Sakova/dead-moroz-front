@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   increaseStep,
   photoPresent,
-} from "../../store/registration/registrationSlice";
+} from "../../../store/registration/registrationSlice";
 import {
   selectAuthToken,
   updateUserAsync,
   updateAddressAsync,
-} from "../../store/user/userSlice";
+} from "../../../store/user/userSlice";
 
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -27,7 +27,7 @@ const defaultFormFields = {
   floor: "",
 };
 
-const SingUpChildInfo = () => {
+export const SignUpChildInfo = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const [file, setFile] = useState();
   const { name, surname, age, street, house, floor } = formFields;
@@ -202,5 +202,3 @@ const SingUpChildInfo = () => {
     </Box>
   );
 };
-
-export default SingUpChildInfo;

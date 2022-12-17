@@ -10,23 +10,26 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   selectItems,
   selectStep,
-} from "../../store/registration/registrationSlice";
-import { selectAuthToken, updateUserAsync } from "../../store/user/userSlice";
+} from "../../../store/registration/registrationSlice";
+import {
+  selectAuthToken,
+  updateUserAsync,
+} from "../../../store/user/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const STEPS = [
   {
-    label: 'Enter your email and password',
+    label: "Enter your email and password",
     description: `To access the application, you first need to register (enter your email and password).
               You will then be able to access the second registration step.`,
   },
   {
-    label: 'Fill in information about yourself',
+    label: "Fill in information about yourself",
     description: `Fill in all the fields so that the Dead Moroz can find you and bring you a gift.
               Until you fill in all the fields, the spirit of the Dead Moroz will follow you.`,
   },
   {
-    label: 'Write what you did well this year',
+    label: "Write what you did well this year",
     description: `Write down the things you did well this year.
             The number of items is not limited.
             Dead Moroz will draw a conclusion about your good deeds this year and give an appropriate gift.
@@ -34,7 +37,7 @@ const STEPS = [
   },
 ];
 
-const SignUpBar = () => {
+export const SignUpLeftBar = () => {
   const activeStep = useSelector(selectStep);
   const items = useSelector(selectItems);
   const token = useSelector(selectAuthToken);
@@ -86,5 +89,3 @@ const SignUpBar = () => {
     </Box>
   );
 };
-
-export default SignUpBar;
