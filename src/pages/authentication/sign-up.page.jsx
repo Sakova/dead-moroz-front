@@ -1,17 +1,18 @@
 import { useSelector } from "react-redux";
 
-import SignUpForm from "../sign-up-form/sign-up-form.component";
-import SignUpBar from "../sign-up-bar/sign-up-bar.component";
+import { SignUpForm } from "../../features/authentication";
+import { SignUpLeftBar } from "../../features/authentication";
+
 import { selectStep } from "../../store/registration/registrationSlice";
-import SingUpChildInfo from "../sign-up-child-info/sign-up-child-info.component";
-import SignUpGoodChildBehavior from "../sign-up-good-child-behavior/sign-up-good-child-behavior.component";
+import { SignUpChildInfo } from "../../features/authentication";
+import { SignUpGoodChildBehavior } from "../../features/authentication";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { green, purple, red } from "@mui/material/colors";
+import { green, red } from "@mui/material/colors";
 import Grid from "@mui/material/Unstable_Grid2";
 import Box from "@mui/material/Box";
 
-const SignUp = () => {
+export const SignUp = () => {
   const step = useSelector(selectStep);
 
   const theme = createTheme({
@@ -30,7 +31,7 @@ const SignUp = () => {
       <Box sx={{ width: "100%" }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid xs={6}>
-            <SignUpBar />
+            <SignUpLeftBar />
           </Grid>
           <Grid
             xs={6}
@@ -43,7 +44,7 @@ const SignUp = () => {
             {step === 0 ? (
               <SignUpForm />
             ) : step === 1 ? (
-              <SingUpChildInfo />
+              <SignUpChildInfo />
             ) : (
               <SignUpGoodChildBehavior />
             )}
@@ -53,5 +54,3 @@ const SignUp = () => {
     </ThemeProvider>
   );
 };
-
-export default SignUp;

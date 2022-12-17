@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { registerUserAsync } from "../../store/user/userSlice";
+import { registerUserAsync } from "../../../store/user/userSlice";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -13,15 +13,15 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { increaseStep } from "../../store/registration/registrationSlice";
-import SnackbarMessage from "../snackbar/snackbar-message.component";
+import { increaseStep } from "../../../store/registration/registrationSlice";
+import SnackbarMessage from "../../../components/snackbar/snackbar-message.component";
 
 const defaultFormFields = {
   email: "",
   password: "",
 };
 
-const SignUpForm = () => {
+export const SignUpForm = () => {
   const dispatch = useDispatch();
   const [formFields, setFormFields] = useState(defaultFormFields);
   const [isReject, setIsReject] = useState(false);
@@ -112,5 +112,3 @@ const SignUpForm = () => {
     </Container>
   );
 };
-
-export default SignUpForm;

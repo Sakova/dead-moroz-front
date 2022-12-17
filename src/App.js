@@ -3,9 +3,9 @@ import { createBrowserRouter } from "react-router-dom";
 
 import Root from "./pages/root.page";
 import ErrorPage from "./pages/error.page";
-import AuthPage from "./pages/auth.page";
-import SignIn from "./components/sign-in/sign-in.component";
-import SignUp from "./components/sign-up/sign-up.component";
+import AuthPage from "./pages/authentication";
+import { SignIn } from "./pages/authentication/sign-in.page";
+import { SignUp } from "./pages/authentication/sign-up.page";
 
 export const router = createBrowserRouter([
   {
