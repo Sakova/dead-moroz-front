@@ -91,9 +91,6 @@ export async function fetchUpdateUser(details) {
   if (details.surname) data.append("surname", details.surname);
   if (details.age) data.append("age", details.age);
   if (details.avatar) data.append("avatar", details.avatar);
-  if (details.street) data.append("street", details.street);
-  if (details.house) data.append("house", details.house);
-  if (details.floor) data.append("floor", details.floor);
   if (details.items) data.append("items", JSON.stringify(details.items));
 
   var config = {
@@ -103,6 +100,24 @@ export async function fetchUpdateUser(details) {
       Authorization: details.token,
     },
     data: data,
+  };
+
+  return request(config);
+}
+
+export async function fetchCreateAddress(data) {
+  const config = {
+    method: "post",
+    url: `${BASE_URL}/api/v1/addresses`,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth_token"),
+    },
+    data: {
+      street: data.street,
+      house: data.house,
+      floor: data.floor,
+    },
   };
 
   return request(config);
