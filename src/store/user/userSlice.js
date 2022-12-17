@@ -7,6 +7,7 @@ import {
   fetchLogInWithToken,
   fetchRandomAvatar,
   fetchUpdateUser,
+  fetchCreateAddress,
 } from "./userAPI";
 
 const LOADING = "loading";
@@ -70,6 +71,14 @@ export const updateUserAsync = createAsyncThunk(
   }
 );
 
+export const updateAddressAsync = createAsyncThunk(
+  "user/fetchCreateAddress",
+  async (data) => {
+    const response = await fetchCreateAddress(data);
+    return response;
+  }
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -81,7 +90,7 @@ export const userSlice = createSlice({
       })
       .addCase(registerUserAsync.fulfilled, (state, action) => {
         state.status = IDLE;
-        state.data = action.payload.data.user;
+        state.data = action.payload.data;
         state.auth_token = action.payload.headers.authorization;
         localStorage.setItem("auth_token", state.auth_token);
       })
@@ -90,7 +99,7 @@ export const userSlice = createSlice({
       })
       .addCase(logInUserAsync.fulfilled, (state, action) => {
         state.status = IDLE;
-        state.data = action.payload.data.user;
+        state.data = action.payload.data;
         state.auth_token = action.payload.headers.authorization;
         localStorage.setItem("auth_token", state.auth_token);
       })
@@ -111,6 +120,7 @@ export const userSlice = createSlice({
           state.auth_token = initialState.auth_token;
           localStorage.removeItem("auth_token");
         } else {
+          console.log(action.payload);
           state.data = action.payload?.data;
           state.auth_token = localStorage.getItem("auth_token");
         }
@@ -127,7 +137,13 @@ export const userSlice = createSlice({
       })
       .addCase(updateUserAsync.fulfilled, (state, action) => {
         state.status = IDLE;
-        state.data = action.payload.data.user;
+        state.data = action.payload.data;
+      })
+      .addCase(updateAddressAsync.pending, (state) => {
+        state.status = LOADING;
+      })
+      .addCase(updateAddressAsync.fulfilled, (state) => {
+        state.status = IDLE;
       });
   },
 });

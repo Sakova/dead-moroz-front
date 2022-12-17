@@ -5,7 +5,11 @@ import {
   increaseStep,
   photoPresent,
 } from "../../store/registration/registrationSlice";
-import { selectAuthToken, updateUserAsync } from "../../store/user/userSlice";
+import {
+  selectAuthToken,
+  updateUserAsync,
+  updateAddressAsync,
+} from "../../store/user/userSlice";
 
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -44,23 +48,31 @@ const SingUpChildInfo = () => {
     event.preventDefault();
 
     dispatch(
-      updateUserAsync({
+      updateAddressAsync({
         token,
-        name,
-        surname,
-        age,
-        avatar: file,
         street,
         house,
         floor,
       })
     ).then((res) => {
-      if (res.type === "user/fetchUpdateUser/fulfilled") {
-        resetFormFields();
-        if (file) {
-          dispatch(photoPresent());
-        }
-        dispatch(increaseStep());
+      if (res.type === "user/fetchCreateAddress/fulfilled") {
+        dispatch(
+          updateUserAsync({
+            token,
+            name,
+            surname,
+            age,
+            avatar: file,
+          })
+        ).then((res) => {
+          if (res.type === "user/fetchUpdateUser/fulfilled") {
+            resetFormFields();
+            if (file) {
+              dispatch(photoPresent());
+            }
+            dispatch(increaseStep());
+          }
+        });
       }
     });
   };
