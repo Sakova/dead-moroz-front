@@ -44,37 +44,36 @@ export const SignUpChildInfo = () => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    dispatch(
+    const res = await dispatch(
       updateAddressAsync({
         token,
         street,
         house,
         floor,
       })
-    ).then((res) => {
-      if (res.type === "user/fetchCreateAddress/fulfilled") {
-        dispatch(
-          updateUserAsync({
-            token,
-            name,
-            surname,
-            age,
-            avatar: file,
-          })
-        ).then((res) => {
-          if (res.type === "user/fetchUpdateUser/fulfilled") {
-            resetFormFields();
-            if (file) {
-              dispatch(photoPresent());
-            }
-            dispatch(increaseStep());
-          }
-        });
+    );
+
+    if (res.type === "user/fetchCreateAddress/fulfilled") {
+      const res = await dispatch(
+        updateUserAsync({
+          token,
+          name,
+          surname,
+          age,
+          avatar: file,
+        })
+      );
+      if (res.type === "user/fetchUpdateUser/fulfilled") {
+        resetFormFields();
+        if (file) {
+          dispatch(photoPresent());
+        }
+        dispatch(increaseStep());
       }
-    });
+    }
   };
 
   const handleChange = (event) => {

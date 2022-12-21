@@ -31,7 +31,7 @@ export const SignUpForm = () => {
     setFormFields(defaultFormFields);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     dispatch(registerUserAsync({ email, password })).then(
       (res) => {
