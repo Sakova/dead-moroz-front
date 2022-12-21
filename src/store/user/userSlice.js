@@ -5,7 +5,6 @@ import {
   fetchLogIn,
   fetchLogOut,
   fetchLogInWithToken,
-  fetchRandomAvatar,
   fetchUpdateUser,
   fetchCreateAddress,
 } from "./userAPI";
@@ -41,8 +40,8 @@ export const logInUserAsync = createAsyncThunk(
 
 export const logOutUserAsync = createAsyncThunk(
   "user/fetchLogOut",
-  async (state) => {
-    const response = await fetchLogOut(state);
+  async () => {
+    const response = await fetchLogOut();
     return response.data;
   }
 );
@@ -52,14 +51,6 @@ export const logInUserWithTokenAsync = createAsyncThunk(
   async (token) => {
     const response = await fetchLogInWithToken(token);
     return response;
-  }
-);
-
-export const getRandomAvatarAsync = createAsyncThunk(
-  "user/fetchRandomAvatar",
-  async () => {
-    const response = await fetchRandomAvatar();
-    return response.data;
   }
 );
 
@@ -82,7 +73,12 @@ export const updateAddressAsync = createAsyncThunk(
 export const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    getRandomAvatar: (state) => {
+      const value = Math.floor(Math.random() * 100);
+      state.data.avatar = `https://avatars.dicebear.com/api/big-smile/${value}.svg?mood[]=happy`;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(registerUserAsync.pending, (state) => {
@@ -120,17 +116,9 @@ export const userSlice = createSlice({
           state.auth_token = initialState.auth_token;
           localStorage.removeItem("auth_token");
         } else {
-          console.log(action.payload);
           state.data = action.payload?.data;
           state.auth_token = localStorage.getItem("auth_token");
         }
-      })
-      .addCase(getRandomAvatarAsync.pending, (state) => {
-        state.status = LOADING;
-      })
-      .addCase(getRandomAvatarAsync.fulfilled, (state, action) => {
-        state.status = IDLE;
-        state.data.avatar = action.payload;
       })
       .addCase(updateUserAsync.pending, (state) => {
         state.status = LOADING;
@@ -148,7 +136,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { increment, decrement, incrementByAmount } = userSlice.actions;
+export const { getRandomAvatar } = userSlice.actions;
 
 export const selectAuthToken = (state) => state.user?.auth_token;
 export const selectUserEmail = (state) => state.user?.email;
@@ -158,5 +146,6 @@ export const isLoggedOut = (state) => {
   return state.user.auth_token == null;
 };
 export const selectAvatar = (state) => state.user?.data?.avatar;
+export const selectStatus = (state) => state.user?.status;
 
 export default userSlice.reducer;

@@ -50,12 +50,12 @@ export async function fetchLogIn(data) {
   return request(config);
 }
 
-export async function fetchLogOut(state) {
+export async function fetchLogOut() {
   const config = {
     method: "delete",
     url: `${BASE_URL}/users/sign_out`,
     headers: {
-      Authorization: state.auth_token,
+      Authorization: localStorage.getItem("auth_token"),
     },
   };
 
@@ -69,16 +69,6 @@ export async function fetchLogInWithToken(token) {
     headers: {
       Authorization: token,
     },
-  };
-
-  return request(config);
-}
-
-export async function fetchRandomAvatar() {
-  const value = Math.floor(Math.random() * 100);
-  const config = {
-    method: "get",
-    url: `https://avatars.dicebear.com/api/big-smile/${value}.svg?mood[]=happy`,
   };
 
   return request(config);

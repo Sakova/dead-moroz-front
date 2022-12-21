@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { logInUserAsync } from "../../store/user/userSlice";
+import { getRandomAvatar, logInUserAsync } from "../../store/user/userSlice";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -39,6 +39,7 @@ export const SignIn = () => {
     event.preventDefault();
     const result = await dispatch(logInUserAsync({ email, password }));
     if (result.type === "user/fetchLogIn/fulfilled") {
+      if (!result.payload.data.avatar) dispatch(getRandomAvatar());
       resetFormFields();
       navigate("/");
     }
