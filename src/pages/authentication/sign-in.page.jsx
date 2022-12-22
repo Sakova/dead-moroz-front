@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { getRandomAvatar, logInUserAsync } from "../../store/user/userSlice";
+import SnackbarMessage from "../../components/snackbar/snackbar-message.component";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -29,6 +30,7 @@ export const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formFields, setFormFields] = useState(defaultFormFields);
+  const [showSnackbar, setShowSnackbar] = useState(false);
   const { email, password } = formFields;
 
   const resetFormFields = () => {
@@ -36,12 +38,15 @@ export const SignIn = () => {
   };
 
   const handleSubmit = async (event) => {
+    setShowSnackbar(false);
     event.preventDefault();
     const result = await dispatch(logInUserAsync({ email, password }));
-    if (result.type === "user/fetchLogIn/fulfilled") {
+    if (result.payload) {
       if (!result.payload.data.avatar) dispatch(getRandomAvatar());
       resetFormFields();
       navigate("/");
+    } else {
+      setShowSnackbar(true);
     }
   };
 
@@ -132,6 +137,9 @@ export const SignIn = () => {
           </Box>
         </Box>
       </Container>
+      {showSnackbar ? (
+        <SnackbarMessage message={"Invalid login data!"} type={"error"} />
+      ) : null}
     </ThemeProvider>
   );
 };
