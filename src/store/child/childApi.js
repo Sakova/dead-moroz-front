@@ -13,10 +13,10 @@ const request = async (config) => {
   return result;
 };
 
-export async function fetchChildGifts() {
+export async function fetchChildGifts(page = 1) {
   const config = {
     method: "get",
-    url: `${BASE_URL}/api/v1/gifts`,
+    url: `${BASE_URL}/api/v1/gifts/page/${page}`,
     headers: {
       Authorization: localStorage.getItem("auth_token"),
     },

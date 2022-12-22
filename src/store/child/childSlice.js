@@ -4,8 +4,8 @@ import { fetchChildGifts, fetchCreateGift } from "./childApi";
 
 export const getChildGiftsAsync = createAsyncThunk(
   "child/fetchChildGifts",
-  async () => {
-    const response = await fetchChildGifts();
+  async (page) => {
+    const response = await fetchChildGifts(page);
     return response;
   }
 );
@@ -25,6 +25,7 @@ const initialState = {
   gifts: [],
   isModelOpen: false,
   status: IDLE,
+  currentPage: 1,
 };
 
 export const childSlice = createSlice({
@@ -33,6 +34,9 @@ export const childSlice = createSlice({
   reducers: {
     setModel: (state) => {
       state.isModelOpen = state.isModelOpen ? false : true;
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -50,12 +54,13 @@ export const childSlice = createSlice({
       .addCase(createChildGiftAsync.fulfilled, (state, action) => {
         state.status = IDLE;
         let gift = action.payload?.data;
-        if (gift) state.gifts.push(gift);
+        if (gift && gift.total_pages === state.currentPage)
+          state.gifts.push(gift);
       });
   },
 });
 
-export const { setModel } = childSlice.actions;
+export const { setModel, setCurrentPage } = childSlice.actions;
 
 export const selectChildGifts = (state) => state.child.gifts;
 export const selectIsModelOpen = (state) => state.child.isModelOpen;
