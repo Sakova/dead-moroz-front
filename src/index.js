@@ -26,7 +26,10 @@ if (cookieExists) {
       }
     });
   }
-} else if (window.location.pathname !== "/sign-in") {
+} else if (
+  window.location.pathname !== "/sign-in" &&
+  window.location.pathname !== "/sign-up"
+) {
   window.location.href = "/sign-in";
 }
 
