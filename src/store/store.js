@@ -22,9 +22,12 @@ export const store = configureStore({
           "child/fetchCreateGift/pending",
           "child/fetchCreateGift/fulfilled",
           "child/fetchChildGifts/fulfilled",
+          "child/setPopoverAnchorEl",
+          "child/fetchUpdateGift/pending",
+          "child/fetchUpdateGift/fulfilled",
         ],
         ignoredActionPaths: [],
-        ignoredPaths: [],
+        ignoredPaths: ["child.popoverAnchorEl"],
       },
     }),
 });

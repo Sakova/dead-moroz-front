@@ -69,7 +69,12 @@ export const SignUpGoodChildBehavior = () => {
   );
 
   return (
-    <Box sx={{ marginTop: 5 }}>
+    <Box
+      sx={{
+        marginTop: 5,
+        minHeight: "597px",
+      }}
+    >
       {!isPhotoPresent ? (
         <SnackbarMessage
           message={"You didn't add avatar, it will auto generate!"}
@@ -77,7 +82,14 @@ export const SignUpGoodChildBehavior = () => {
         />
       ) : null}
       {addItemButton}
-      <Box sx={{ mt: 1 }}>
+      <Box
+        sx={{
+          mt: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Box
           component="div"
           sx={{

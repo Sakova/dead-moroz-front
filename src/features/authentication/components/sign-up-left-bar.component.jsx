@@ -56,7 +56,7 @@ export const SignUpLeftBar = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 400, marginTop: 14, marginLeft: "auto" }}>
+    <Box sx={{ maxWidth: 400, justifyContent: "end", alignItems: "end" }}>
       <Stepper activeStep={activeStep} orientation="vertical">
         {STEPS.map((step, index) => (
           <Step key={step.label}>

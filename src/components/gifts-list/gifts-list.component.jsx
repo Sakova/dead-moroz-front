@@ -1,7 +1,11 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 
-import { selectChildGifts } from "../../store/child/childSlice";
+import {
+  selectChildGifts,
+  selectPopoverAnchorEl,
+  setPopoverAnchorEl,
+} from "../../store/child/childSlice";
 import PopoverCard from "../popover-card/popover-card.component";
 
 import ImageList from "@mui/material/ImageList";
@@ -16,17 +20,18 @@ const GIFT_URL =
   "https://res.cloudinary.com/doz8n2ayx/image/upload/v1671569315/christmas-wrapped-gift_bbqaql.svg";
 
 const GiftList = () => {
+  const dispatch = useDispatch();
   const gifts = useSelector(selectChildGifts);
   const [gift, setGift] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const anchorEl = useSelector(selectPopoverAnchorEl);
 
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    dispatch(setPopoverAnchorEl(event.currentTarget));
     setGift(event.currentTarget.value);
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    dispatch(setPopoverAnchorEl(null));
   };
 
   const open = Boolean(anchorEl);

@@ -1,6 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { fetchChildGifts, fetchCreateGift } from "./childApi";
+import {
+  fetchChildGifts,
+  fetchCreateGift,
+  fetchDeleteGift,
+  fetchUpdateGift,
+} from "./childApi";
 
 export const getChildGiftsAsync = createAsyncThunk(
   "child/fetchChildGifts",
@@ -18,12 +23,29 @@ export const createChildGiftAsync = createAsyncThunk(
   }
 );
 
+export const updateChildGiftAsync = createAsyncThunk(
+  "child/fetchUpdateGift",
+  async (data) => {
+    const response = await fetchUpdateGift(data);
+    return response;
+  }
+);
+
+export const deleteChildGiftAsync = createAsyncThunk(
+  "child/fetchDeleteGift",
+  async (giftId) => {
+    const response = await fetchDeleteGift(giftId);
+    return response;
+  }
+);
+
 const LOADING = "loading";
 const IDLE = "idle";
 
 const initialState = {
   gifts: [],
   isModelOpen: false,
+  popoverAnchorEl: null,
   status: IDLE,
   currentPage: 1,
 };
@@ -37,6 +59,9 @@ export const childSlice = createSlice({
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
+    },
+    setPopoverAnchorEl: (state, action) => {
+      state.popoverAnchorEl = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -53,17 +78,38 @@ export const childSlice = createSlice({
       })
       .addCase(createChildGiftAsync.fulfilled, (state, action) => {
         state.status = IDLE;
-        let gift = action.payload?.data;
+        const gift = action.payload?.data;
         if (gift && gift.total_pages === state.currentPage)
           state.gifts.push(gift);
+      })
+      .addCase(updateChildGiftAsync.pending, (state) => {
+        state.status = LOADING;
+      })
+      .addCase(updateChildGiftAsync.fulfilled, (state, action) => {
+        state.status = IDLE;
+        const fetchGift = action.payload.data;
+        state.gifts = state.gifts.map((gift) =>
+          gift.id === fetchGift.id ? fetchGift : gift
+        );
+      })
+      .addCase(deleteChildGiftAsync.pending, (state) => {
+        state.status = LOADING;
+      })
+      .addCase(deleteChildGiftAsync.fulfilled, (state, action) => {
+        state.status = IDLE;
+        const giftId = action.payload.giftId;
+        state.gifts = state.gifts.filter((gift) => gift.id !== giftId);
       });
   },
 });
 
-export const { setModel, setCurrentPage } = childSlice.actions;
+export const { setModel, setCurrentPage, setPopoverAnchorEl } =
+  childSlice.actions;
 
 export const selectChildGifts = (state) => state.child.gifts;
 export const selectIsModelOpen = (state) => state.child.isModelOpen;
+export const selectPopoverAnchorEl = (state) => state.child.popoverAnchorEl;
 export const selectStatus = (state) => state.child.status;
+export const selectCurrentPage = (state) => state.child.currentPage;
 
 export default childSlice.reducer;

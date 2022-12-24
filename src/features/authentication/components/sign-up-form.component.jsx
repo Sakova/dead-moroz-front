@@ -50,7 +50,7 @@ export const SignUpForm = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ marginLeft: 0 }}>
       {isReject ? (
         <SnackbarMessage message={"Invalid sign up data!"} type={"error"} />
       ) : null}

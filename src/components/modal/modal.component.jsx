@@ -6,6 +6,8 @@ import {
   createChildGiftAsync,
   selectIsModelOpen,
   setModel,
+  setPopoverAnchorEl,
+  updateChildGiftAsync,
 } from "../../store/child/childSlice";
 import SnackbarMessage from "../snackbar/snackbar-message.component";
 
@@ -71,7 +73,7 @@ const style = (theme) => ({
 
 const defaultFormField = "";
 
-const Modal = () => {
+const Modal = ({ gift = null }) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleClose = () => dispatch(setModel());
@@ -103,20 +105,37 @@ const Modal = () => {
     resetFormField();
     dispatch(setModel());
 
-    const res = await dispatch(
-      createChildGiftAsync({
-        description: formField,
-        photo: file,
-      })
-    );
+    if (!gift) {
+      const res = await dispatch(
+        createChildGiftAsync({
+          description: formField,
+          photo: file,
+        })
+      );
 
-    if (res.type === "child/fetchCreateGift/fulfilled") {
-      setSend(true);
+      if (res.type === "child/fetchCreateGift/fulfilled") {
+        setSend(true);
+      }
+    } else {
+      const res = await dispatch(
+        updateChildGiftAsync({
+          description: formField,
+          photo: file,
+          giftId: gift.id,
+        })
+      );
+
+      if (res.type === "child/fetchUpdateGift/fulfilled") {
+        dispatch(setPopoverAnchorEl(null));
+      }
     }
   };
 
   useEffect(() => {
     setOpen(modelState);
+    if (gift) {
+      setFormField(gift.description);
+    }
   }, [modelState]);
 
   return (

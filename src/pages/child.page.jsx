@@ -20,8 +20,8 @@ const ChildPage = () => {
 
   const handlePaginationCange = async (_, page) => {
     if (page !== prevPage) {
-      dispatch(getChildGiftsAsync(page));
-      dispatch(setCurrentPage(page));
+      await dispatch(getChildGiftsAsync(page));
+      await dispatch(setCurrentPage(page));
     }
     setPrevPage(page);
   };

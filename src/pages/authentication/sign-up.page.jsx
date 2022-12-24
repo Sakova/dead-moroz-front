@@ -30,17 +30,17 @@ export const SignUp = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ width: "100%" }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid xs={6}>
-            <SignUpLeftBar />
-          </Grid>
           <Grid
             xs={6}
             sx={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "end",
               alignItems: "center",
             }}
           >
+            <SignUpLeftBar />
+          </Grid>
+          <Grid xs={6}>
             {step === 0 ? (
               <SignUpForm />
             ) : step === 1 ? (

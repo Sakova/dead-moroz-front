@@ -30,7 +30,7 @@ export async function fetchCreateGift(details) {
   if (details.description) data.append("description", details.description);
   if (details.photo) data.append("photo", details.photo);
 
-  var config = {
+  const config = {
     method: "post",
     url: `${BASE_URL}/api/v1/gifts`,
     headers: {
@@ -40,4 +40,33 @@ export async function fetchCreateGift(details) {
   };
 
   return request(config);
+}
+
+export async function fetchUpdateGift(details) {
+  const data = new FormData();
+  if (details.description) data.append("description", details.description);
+  if (details.photo) data.append("photo", details.photo);
+
+  const config = {
+    method: "patch",
+    url: `${BASE_URL}/api/v1/gifts/${details.giftId}`,
+    headers: {
+      Authorization: localStorage.getItem("auth_token"),
+    },
+    data: data,
+  };
+
+  return request(config);
+}
+
+export async function fetchDeleteGift(giftId) {
+  const config = {
+    method: "delete",
+    url: `${BASE_URL}/api/v1/gifts/${giftId}`,
+    headers: {
+      Authorization: localStorage.getItem("auth_token"),
+    },
+  };
+
+  return { result: request(config).result, giftId };
 }
