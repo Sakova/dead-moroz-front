@@ -82,6 +82,8 @@ export async function fetchUpdateUser(details) {
   if (details.age) data.append("age", details.age);
   if (details.avatar) data.append("avatar", details.avatar);
   if (details.items) data.append("items", JSON.stringify(details.items));
+  if (details.email) data.append("email", details.email);
+  if (details.password) data.append("password", details.password);
 
   var config = {
     method: "patch",

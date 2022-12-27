@@ -1,9 +1,13 @@
 import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 import { ImageAvatar } from "../components/avatar/avatar.component";
 import { isLoggedOut, selectStatus, selectUser } from "../store/user/userSlice";
+import Progress from "../components/progress/progress.component";
+import { getChildGiftsAsync, setModel } from "../store/child/childSlice";
+import Modal from "../components/modal/modal.component";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -11,22 +15,18 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import RedeemRoundedIcon from "@mui/icons-material/RedeemRounded";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { green, red } from "@mui/material/colors";
-import Progress from "../components/progress/progress.component";
-import { getChildGiftsAsync, setModel } from "../store/child/childSlice";
-import Modal from "../components/modal/modal.component";
+import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 
 const drawerWidth = 240;
 
@@ -59,16 +59,20 @@ const Root = (props) => {
           {`Hi, ${user.name} ${user.surname}`}
         </Typography>
       </Toolbar>
+
       <Divider />
+
       <List>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <RedeemRoundedIcon color="error" />
-            </ListItemIcon>
-            <ListItemText primary={"List of gifts"} />
-          </ListItemButton>
-        </ListItem>
+        <Link to={"/"} style={{ textDecoration: "none", color: "black" }}>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <RedeemRoundedIcon color="error" />
+              </ListItemIcon>
+              <ListItemText primary={"List of gifts"} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
 
         <ListItem disablePadding>
           <ListItemButton onClick={() => handleWishModel()}>
@@ -79,19 +83,19 @@ const Root = (props) => {
           </ListItemButton>
         </ListItem>
       </List>
+
       <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+
+      <Link to={"profile"} style={{ textDecoration: "none", color: "black" }}>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <AccountCircleRoundedIcon color="success" />
+            </ListItemIcon>
+            <ListItemText primary={"Profile page"} />
+          </ListItemButton>
+        </ListItem>
+      </Link>
     </div>
   );
 

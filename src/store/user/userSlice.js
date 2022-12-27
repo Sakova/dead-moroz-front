@@ -142,6 +142,7 @@ export const selectAuthToken = (state) => state.user?.auth_token;
 export const selectUserEmail = (state) => state.user?.email;
 export const selectUserID = (state) => state.user?.id;
 export const selectUser = (state) => state.user?.data;
+export const selectProfileItems = (state) => state.user?.data?.items;
 export const isLoggedOut = (state) => {
   return state.user.auth_token == null;
 };

@@ -3,10 +3,11 @@ import { createBrowserRouter } from "react-router-dom";
 
 import Root from "./pages/root.page";
 import ErrorPage from "./pages/error.page";
+import ChildPage from "./pages/child/child.page";
+import ProfilePage from "./pages/child/profile.page";
 import AuthPage from "./pages/authentication";
 import { SignIn } from "./pages/authentication/sign-in.page";
 import { SignUp } from "./pages/authentication/sign-up.page";
-import ChildPage from "./pages/child.page";
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <ChildPage />,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />,
       },
     ],
   },

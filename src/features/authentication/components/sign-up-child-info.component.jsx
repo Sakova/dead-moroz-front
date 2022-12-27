@@ -188,7 +188,7 @@ export const SignUpChildInfo = () => {
         <Grid
           xs={3}
           sx={{
-            display: "flex",
+            display: "inline-grid",
             justifyContent: "start",
             alignItems: "start",
           }}

@@ -3,9 +3,9 @@ import {
   getChildGiftsAsync,
   selectChildGifts,
   setCurrentPage,
-} from "../store/child/childSlice";
+} from "../../store/child/childSlice";
 
-import GiftList from "../components/gifts-list/gifts-list.component";
+import GiftList from "../../components/gifts-list/gifts-list.component";
 
 import Pagination from "@mui/material/Pagination";
 import { useState } from "react";

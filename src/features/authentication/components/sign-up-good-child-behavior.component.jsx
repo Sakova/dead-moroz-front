@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -7,6 +7,7 @@ import {
   selectPhoto,
 } from "../../../store/registration/registrationSlice";
 import SnackbarMessage from "../../../components/snackbar/snackbar-message.component";
+import { selectProfileItems } from "../../../store/user/userSlice";
 
 import MasonryItems from "../../../components/masonry/masonry.component";
 import Box from "@mui/material/Box";
@@ -17,12 +18,22 @@ import Masonry from "@mui/lab/Masonry";
 
 const defaultFormField = "";
 
-export const SignUpGoodChildBehavior = () => {
+export const SignUpGoodChildBehavior = ({ isProfileEdit = false }) => {
   const dispatch = useDispatch();
   const [formField, setFormField] = useState(defaultFormField);
   const item = formField;
-  const items = useSelector(selectItems);
+  const signUpItems = useSelector(selectItems);
+  const profileItems = useSelector(selectProfileItems);
+  const items = signUpItems.length ? signUpItems : profileItems;
   const isPhotoPresent = useSelector(selectPhoto);
+
+  useEffect(() => {
+    if (isProfileEdit && profileItems.length) {
+      profileItems.forEach((item) => {
+        if (!signUpItems.includes(item)) dispatch(addItem(item));
+      });
+    }
+  }, []);
 
   const resetFormFields = () => {
     setFormField(defaultFormField);
@@ -75,7 +86,7 @@ export const SignUpGoodChildBehavior = () => {
         minHeight: "597px",
       }}
     >
-      {!isPhotoPresent ? (
+      {!isPhotoPresent && !isProfileEdit ? (
         <SnackbarMessage
           message={"You didn't add avatar, it will auto generate!"}
           type={"info"}
