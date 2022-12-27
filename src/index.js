@@ -3,7 +3,10 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 
-import { logInUserWithTokenAsync } from "./store/user/userSlice";
+import {
+  getRandomAvatar,
+  logInUserWithTokenAsync,
+} from "./store/user/userSlice";
 import { store } from "./store/store";
 import { router } from "./App";
 
@@ -18,19 +21,22 @@ if (cookieExists) {
     store.dispatch(logInUserWithTokenAsync(authToken)).then((res) => {
       if (res.payload === undefined) {
         window.location.href = "/sign-in";
+      } else if (!res.payload.data.avatar) {
+        store.dispatch(getRandomAvatar());
       }
     });
   }
-} else if (window.location.pathname !== "/sign-in") {
+} else if (
+  window.location.pathname !== "/sign-in" &&
+  window.location.pathname !== "/sign-up"
+) {
   window.location.href = "/sign-in";
 }
 
 const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
 );

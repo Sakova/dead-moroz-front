@@ -1,3 +1,16 @@
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  selectItems,
+  selectStep,
+} from "../../../store/registration/registrationSlice";
+import {
+  getRandomAvatar,
+  selectAuthToken,
+  updateUserAsync,
+} from "../../../store/user/userSlice";
+
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -6,16 +19,6 @@ import StepContent from "@mui/material/StepContent";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  selectItems,
-  selectStep,
-} from "../../../store/registration/registrationSlice";
-import {
-  selectAuthToken,
-  updateUserAsync,
-} from "../../../store/user/userSlice";
-import { useNavigate } from "react-router-dom";
 
 const STEPS = [
   {
@@ -44,14 +47,16 @@ export const SignUpLeftBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleFinish = () => {
-    dispatch(updateUserAsync({ token, items })).then((res) => {
+  const handleFinish = async () => {
+    const res = await dispatch(updateUserAsync({ token, items }));
+    if (res.type === "user/fetchUpdateUser/fulfilled") {
+      if (!res.payload.data.avatar) await dispatch(getRandomAvatar());
       navigate("/");
-    });
+    }
   };
 
   return (
-    <Box sx={{ maxWidth: 400, marginTop: 14, marginLeft: "auto" }}>
+    <Box sx={{ maxWidth: 400, justifyContent: "end", alignItems: "end" }}>
       <Stepper activeStep={activeStep} orientation="vertical">
         {STEPS.map((step, index) => (
           <Step key={step.label}>

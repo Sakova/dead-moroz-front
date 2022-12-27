@@ -50,12 +50,12 @@ export async function fetchLogIn(data) {
   return request(config);
 }
 
-export async function fetchLogOut(state) {
+export async function fetchLogOut() {
   const config = {
     method: "delete",
     url: `${BASE_URL}/users/sign_out`,
     headers: {
-      Authorization: state.auth_token,
+      Authorization: localStorage.getItem("auth_token"),
     },
   };
 
@@ -74,16 +74,6 @@ export async function fetchLogInWithToken(token) {
   return request(config);
 }
 
-export async function fetchRandomAvatar() {
-  const value = Math.floor(Math.random() * 100);
-  const config = {
-    method: "get",
-    url: `https://avatars.dicebear.com/api/big-smile/${value}.svg?mood[]=happy`,
-  };
-
-  return request(config);
-}
-
 export async function fetchUpdateUser(details) {
   const FormData = require("form-data");
   const data = new FormData();
@@ -92,6 +82,8 @@ export async function fetchUpdateUser(details) {
   if (details.age) data.append("age", details.age);
   if (details.avatar) data.append("avatar", details.avatar);
   if (details.items) data.append("items", JSON.stringify(details.items));
+  if (details.email) data.append("email", details.email);
+  if (details.password) data.append("password", details.password);
 
   var config = {
     method: "patch",

@@ -31,17 +31,16 @@ export const SignUpForm = () => {
     setFormFields(defaultFormFields);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
+    setIsReject(false);
     event.preventDefault();
-    dispatch(registerUserAsync({ email, password })).then(
-      (res) => {
-        if (res.type === "user/fetchRegisterUser/fulfilled") {
-          resetFormFields();
-          dispatch(increaseStep());
-        }
-      },
-      (res) => setIsReject(true)
-    );
+    const result = await dispatch(registerUserAsync({ email, password }));
+    if (result.payload) {
+      resetFormFields();
+      dispatch(increaseStep());
+    } else {
+      setIsReject(true);
+    }
   };
 
   const handleChange = (event) => {
@@ -51,9 +50,9 @@ export const SignUpForm = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ marginLeft: 0 }}>
       {isReject ? (
-        <SnackbarMessage message={"Invalid data!"} type={"error"} />
+        <SnackbarMessage message={"Invalid sign up data!"} type={"error"} />
       ) : null}
       <CssBaseline />
       <Box
