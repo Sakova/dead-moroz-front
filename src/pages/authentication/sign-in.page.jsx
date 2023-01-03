@@ -40,11 +40,17 @@ export const SignIn = () => {
   const handleSubmit = async (event) => {
     setShowSnackbar(false);
     event.preventDefault();
-    const result = await dispatch(logInUserAsync({ email, password }));
-    if (result.payload) {
-      if (!result.payload.data.avatar) dispatch(getRandomAvatar());
+    const res = await dispatch(logInUserAsync({ email, password }));
+    if (res.payload) {
+      if (!res.payload.data.avatar) dispatch(getRandomAvatar());
       resetFormFields();
-      navigate("/");
+      if (res.payload.data.role === "user") {
+        navigate("/child-gifts");
+      } else if (res.payload.data.role === "elf") {
+        navigate("/elf-page");
+      } else if (res.payload.data.role === "dead") {
+        navigate("/");
+      }
     } else {
       setShowSnackbar(true);
     }
