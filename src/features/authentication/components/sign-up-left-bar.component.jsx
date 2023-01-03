@@ -51,7 +51,13 @@ export const SignUpLeftBar = () => {
     const res = await dispatch(updateUserAsync({ token, items }));
     if (res.type === "user/fetchUpdateUser/fulfilled") {
       if (!res.payload.data.avatar) await dispatch(getRandomAvatar());
-      navigate("/");
+      if (res.payload.data.role === "user") {
+        navigate("/child-gifts");
+      } else if (res.payload.data.role === "elf") {
+        navigate("/elf-page");
+      } else if (res.payload.data.role === "dead") {
+        navigate("/");
+      }
     }
   };
 
