@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import registrationReducer from "./registration/registrationSlice";
 import userReducer from "./user/userSlice";
 import childReducer from "./child/childSlice";
+import elfReducer from "./elf/elfSlice";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     registration: registrationReducer,
     child: childReducer,
+    elf: elfReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -25,6 +27,9 @@ export const store = configureStore({
           "child/setPopoverAnchorEl",
           "child/fetchUpdateGift/pending",
           "child/fetchUpdateGift/fulfilled",
+          "elf/fetchUsers/fulfilled",
+          "elf/fetchCreateAssessment/fulfilled",
+          "elf/fetchCreateFeedback/fulfilled",
         ],
         ignoredActionPaths: [],
         ignoredPaths: ["child.popoverAnchorEl"],
