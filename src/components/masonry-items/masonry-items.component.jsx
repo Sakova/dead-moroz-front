@@ -11,7 +11,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const MasonryItems = ({ item, index }) => {
+const MasonryItems = ({ item, index, userRole }) => {
   const dispatch = useDispatch();
 
   const removeItem = (item) => {
@@ -20,7 +20,11 @@ const MasonryItems = ({ item, index }) => {
   };
 
   return (
-    <Item value={index} onClick={removeItem} sx={{ overflow: "hidden" }}>
+    <Item
+      value={index}
+      onClick={userRole === "user" ? removeItem : null}
+      sx={{ overflow: "hidden" }}
+    >
       {item}
     </Item>
   );

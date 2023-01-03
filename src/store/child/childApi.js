@@ -29,6 +29,7 @@ export async function fetchCreateGift(details) {
   const data = new FormData();
   if (details.description) data.append("description", details.description);
   if (details.photo) data.append("photo", details.photo);
+  if (details.userId) data.append("user_id", details.userId);
 
   const config = {
     method: "post",

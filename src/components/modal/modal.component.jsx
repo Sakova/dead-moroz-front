@@ -20,6 +20,7 @@ import { Button } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import DoneOutlineRoundedIcon from "@mui/icons-material/DoneOutlineRounded";
 import Grid from "@mui/material/Unstable_Grid2";
+import { addCreatedGift, selectChosenUser } from "../../store/elf/elfSlice";
 
 const BackdropUnstyled = forwardRef((props, ref) => {
   const { open, className, ...other } = props;
@@ -81,6 +82,7 @@ const Modal = ({ gift = null }) => {
   const [file, setFile] = useState();
   const [formField, setFormField] = useState(defaultFormField);
   const [send, setSend] = useState(false);
+  const chosenUser = useSelector(selectChosenUser);
 
   const resetFormField = () => {
     setFormField(defaultFormField);
@@ -104,17 +106,20 @@ const Modal = ({ gift = null }) => {
     event.preventDefault();
     resetFormField();
     dispatch(setModel());
+    const userId = chosenUser ? chosenUser.id : null;
 
     if (!gift) {
       const res = await dispatch(
         createChildGiftAsync({
           description: formField,
           photo: file,
+          userId: userId,
         })
       );
 
       if (res.type === "child/fetchCreateGift/fulfilled") {
         setSend(true);
+        dispatch(addCreatedGift(res.payload.data));
       }
     } else {
       const res = await dispatch(

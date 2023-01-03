@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import { isLoggedOut, selectStatus, selectUser } from "../store/user/userSlice";
 import Progress from "../components/progress/progress.component";
 import { getChildGiftsAsync, setModel } from "../store/child/childSlice";
 import Modal from "../components/modal/modal.component";
+import { getUsersAsync, selectChosenUser } from "../store/elf/elfSlice";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -27,20 +28,27 @@ import RedeemRoundedIcon from "@mui/icons-material/RedeemRounded";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { green, red } from "@mui/material/colors";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import ChildCareIcon from "@mui/icons-material/ChildCare";
 
 const drawerWidth = 240;
 
 const Root = (props) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const isNotLogged = useSelector(isLoggedOut);
   const status = useSelector(selectStatus);
   const user = useSelector(selectUser);
-  const { window } = props;
+  const chosenUser = useSelector(selectChosenUser);
+  const user_role = user.role;
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(getChildGiftsAsync());
-  }, [dispatch]);
+    if (user_role === "user") dispatch(getChildGiftsAsync());
+    if (user_role === "elf") dispatch(getUsersAsync());
+    if (!chosenUser && window.location.pathname === "/child-page") {
+      navigate("/elf-page");
+    }
+  }, [user_role]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -63,25 +71,51 @@ const Root = (props) => {
       <Divider />
 
       <List>
-        <Link to={"/"} style={{ textDecoration: "none", color: "black" }}>
+        <Link
+          to={user_role === "user" ? "/child-gifts" : "/elf-page"}
+          style={{ textDecoration: "none", color: "black" }}
+        >
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <RedeemRoundedIcon color="error" />
+                {user_role === "user" ? (
+                  <RedeemRoundedIcon color="error" />
+                ) : (
+                  <ChildCareIcon color="error" />
+                )}
               </ListItemIcon>
-              <ListItemText primary={"List of gifts"} />
+              <ListItemText
+                primary={
+                  user_role === "user" ? "List of gifts" : "List of childrens"
+                }
+              />
             </ListItemButton>
           </ListItem>
         </Link>
 
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => handleWishModel()}>
-            <ListItemIcon>
-              <RedeemRoundedIcon color="success" />
-            </ListItemIcon>
-            <ListItemText primary={"Write a wish"} />
-          </ListItemButton>
-        </ListItem>
+        {user_role === "user" ? (
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => handleWishModel()}>
+              <ListItemIcon>
+                <RedeemRoundedIcon color="success" />
+              </ListItemIcon>
+              <ListItemText primary={"Write a wish"} />
+            </ListItemButton>
+          </ListItem>
+        ) : user_role === "elf" &&
+          window.location.pathname === "/child-page" ? (
+          <>
+            <Divider />
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => handleWishModel()}>
+                <ListItemIcon>
+                  <RedeemRoundedIcon color="success" />
+                </ListItemIcon>
+                <ListItemText primary={"Add alternative gift"} />
+              </ListItemButton>
+            </ListItem>
+          </>
+        ) : null}
       </List>
 
       <Divider />
@@ -98,9 +132,6 @@ const Root = (props) => {
       </Link>
     </div>
   );
-
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
 
   const customTheme = createTheme({
     palette: {
@@ -156,7 +187,6 @@ const Root = (props) => {
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
-          container={container}
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}

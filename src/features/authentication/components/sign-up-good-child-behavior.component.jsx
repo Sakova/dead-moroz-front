@@ -7,9 +7,13 @@ import {
   selectPhoto,
 } from "../../../store/registration/registrationSlice";
 import SnackbarMessage from "../../../components/snackbar/snackbar-message.component";
-import { selectProfileItems } from "../../../store/user/userSlice";
+import {
+  selectProfileItems,
+  selectUserRole,
+} from "../../../store/user/userSlice";
+import { selectChosenUserItems } from "../../../store/elf/elfSlice";
 
-import MasonryItems from "../../../components/masonry/masonry.component";
+import MasonryItems from "../../../components/masonry-items/masonry-items.component";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
@@ -24,8 +28,14 @@ export const SignUpGoodChildBehavior = ({ isProfileEdit = false }) => {
   const item = formField;
   const signUpItems = useSelector(selectItems);
   const profileItems = useSelector(selectProfileItems);
-  const items = signUpItems.length ? signUpItems : profileItems;
+  const chosenUserItems = useSelector(selectChosenUserItems);
+  const items = signUpItems.length
+    ? signUpItems
+    : profileItems.length
+    ? profileItems
+    : chosenUserItems;
   const isPhotoPresent = useSelector(selectPhoto);
+  const userRole = useSelector(selectUserRole);
 
   useEffect(() => {
     if (isProfileEdit && profileItems.length) {
@@ -68,7 +78,7 @@ export const SignUpGoodChildBehavior = ({ isProfileEdit = false }) => {
         sx={{ mb: 1 }}
         required
         id="outlined-required"
-        label="Item"
+        label="Good behavior this year"
         onChange={handleChange}
         name="item"
         value={item}
@@ -92,7 +102,7 @@ export const SignUpGoodChildBehavior = ({ isProfileEdit = false }) => {
           type={"info"}
         />
       ) : null}
-      {addItemButton}
+      {userRole === "user" ? addItemButton : null}
       <Box
         sx={{
           mt: 1,
@@ -111,8 +121,13 @@ export const SignUpGoodChildBehavior = ({ isProfileEdit = false }) => {
           }}
         >
           <Masonry columns={4} spacing={2}>
-            {items.map((item, index) => (
-              <MasonryItems key={index} item={item} index={index} />
+            {items?.map((item, index) => (
+              <MasonryItems
+                key={index}
+                item={item}
+                index={index}
+                userRole={userRole}
+              />
             ))}
           </Masonry>
         </Box>
