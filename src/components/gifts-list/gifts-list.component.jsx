@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   selectChildGifts,
@@ -22,16 +22,24 @@ const GIFT_URL =
 const GiftList = () => {
   const dispatch = useDispatch();
   const gifts = useSelector(selectChildGifts);
+  const anchor = useSelector(selectPopoverAnchorEl);
   const [gift, setGift] = useState(null);
-  const anchorEl = useSelector(selectPopoverAnchorEl);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
-    dispatch(setPopoverAnchorEl(event.currentTarget));
+    dispatch(setPopoverAnchorEl(true));
+    setAnchorEl(event.currentTarget);
     setGift(event.currentTarget.value);
   };
 
+  useEffect(() => {
+    if (anchor === null) {
+      setAnchorEl(null);
+    }
+  }, [anchor]);
+
   const handleClose = () => {
-    dispatch(setPopoverAnchorEl(null));
+    setAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
