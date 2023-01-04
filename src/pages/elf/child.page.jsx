@@ -378,6 +378,7 @@ const ChildPage = () => {
           </div>
           <Box component="form" noValidate autoComplete="off">
             <TextField
+              required
               id="standard-comment-textarea"
               label="Elf comment"
               placeholder="Comment"
@@ -410,15 +411,17 @@ const ChildPage = () => {
               marginTop: "10px",
             }}
           >
-            <Button
-              onClick={handleSubmit}
-              fullWidth
-              variant="contained"
-              color="success"
-              sx={{ width: "unset", height: "fit-content" }}
-            >
-              Save
-            </Button>
+            {comment ? (
+              <Button
+                onClick={handleSubmit}
+                fullWidth
+                variant="contained"
+                color="success"
+                sx={{ width: "unset", height: "fit-content" }}
+              >
+                Save
+              </Button>
+            ) : null}
           </div>
         </div>
       </div>
