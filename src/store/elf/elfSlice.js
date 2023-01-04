@@ -6,6 +6,7 @@ import {
   fetchUpdateAssessment,
   fetchCreateFeedback,
   fetchUpdateFeedback,
+  fetchTranslateProfile,
 } from "./elfApi";
 
 export const getUsersAsync = createAsyncThunk(
@@ -48,12 +49,21 @@ export const updateFeedbackAsync = createAsyncThunk(
   }
 );
 
+export const translateProfileAsync = createAsyncThunk(
+  "elf/fetchTranslateProfile",
+  async (details) => {
+    const response = await fetchTranslateProfile(details);
+    return response;
+  }
+);
+
 const LOADING = "loading";
 const IDLE = "idle";
 
 const initialState = {
   users: [],
   chosenUser: null,
+  chosenUserIndex: null,
   status: IDLE,
 };
 
@@ -63,6 +73,10 @@ export const elfSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.chosenUser = state.users[action.payload];
+      state.chosenUserIndex = action.payload;
+    },
+    cancelTranslation: (state) => {
+      state.chosenUser = state.users[state.chosenUserIndex];
     },
     addCreatedGift: (state, aciton) => {
       state.chosenUser.gifts.push(aciton.payload);
@@ -110,15 +124,31 @@ export const elfSlice = createSlice({
       .addCase(updateFeedbackAsync.fulfilled, (state, action) => {
         state.status = IDLE;
         state.chosenUser.feedbacks[0] = action.payload.data;
+      })
+      .addCase(translateProfileAsync.pending, (state) => {
+        state.status = LOADING;
+      })
+      .addCase(translateProfileAsync.fulfilled, (state, action) => {
+        state.status = IDLE;
+        state.chosenUser.items = action.payload.data.items;
+
+        const gifts = action.payload.data.gifts;
+        const translatedGifts = state.chosenUser.gifts.map((gift, index) => {
+          gift.description = gifts[index];
+          return gift;
+        });
+        state.chosenUser.gifts = translatedGifts;
       });
   },
 });
 
-export const { setUser, addCreatedGift, removeDeletedGift } = elfSlice.actions;
+export const { setUser, cancelTranslation, addCreatedGift, removeDeletedGift } =
+  elfSlice.actions;
 
 export const selectUsers = (state) => state.elf.users;
 export const selectChosenUser = (state) => state.elf.chosenUser;
 export const selectChosenUserItems = (state) => state.elf.chosenUser?.items;
 export const selectChosenUserGifts = (state) => state.elf.chosenUser?.gifts;
+export const selectElfStatus = (state) => state.elf.status;
 
 export default elfSlice.reducer;

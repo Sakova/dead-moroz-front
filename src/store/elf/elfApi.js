@@ -90,3 +90,15 @@ export async function fetchUpdateFeedback(details) {
 
   return request(config);
 }
+
+export async function fetchTranslateProfile(details) {
+  var config = {
+    method: "get",
+    url: `${BASE_URL}/api/v1/users/${details.userId}`,
+    headers: {
+      Authorization: localStorage.getItem("auth_token"),
+    },
+  };
+
+  return request(config);
+}
