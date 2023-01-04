@@ -30,6 +30,7 @@ export const store = configureStore({
           "elf/fetchUsers/fulfilled",
           "elf/fetchCreateAssessment/fulfilled",
           "elf/fetchCreateFeedback/fulfilled",
+          "elf/fetchTranslateProfile/fulfilled"
         ],
         ignoredActionPaths: [],
         ignoredPaths: ["child.popoverAnchorEl"],

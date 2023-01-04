@@ -8,7 +8,14 @@ import { isLoggedOut, selectStatus, selectUser } from "../store/user/userSlice";
 import Progress from "../components/progress/progress.component";
 import { getChildGiftsAsync, setModel } from "../store/child/childSlice";
 import Modal from "../components/modal/modal.component";
-import { getUsersAsync, selectChosenUser } from "../store/elf/elfSlice";
+import {
+  cancelTranslation,
+  getUsersAsync,
+  selectChosenUser,
+  selectElfStatus,
+  setUser,
+  translateProfileAsync,
+} from "../store/elf/elfSlice";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -29,18 +36,22 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { green, red } from "@mui/material/colors";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import ChildCareIcon from "@mui/icons-material/ChildCare";
+import GTranslateIcon from "@mui/icons-material/GTranslate";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const drawerWidth = 240;
 
-const Root = (props) => {
+const Root = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isNotLogged = useSelector(isLoggedOut);
   const status = useSelector(selectStatus);
   const user = useSelector(selectUser);
   const chosenUser = useSelector(selectChosenUser);
+  const elfStatus = useSelector(selectElfStatus);
   const user_role = user.role;
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [translated, setTranslated] = useState(false);
 
   useEffect(() => {
     if (user_role === "user") dispatch(getChildGiftsAsync());
@@ -50,12 +61,25 @@ const Root = (props) => {
     }
   }, [user_role]);
 
+  useEffect(() => {
+    if (translated === true) setTranslated(false);
+  }, [window.location.pathname]);
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
   const handleWishModel = () => {
     dispatch(setModel());
+  };
+
+  const handleTranslateClick = () => {
+    if (!translated) {
+      dispatch(translateProfileAsync({ userId: chosenUser.id }));
+    } else {
+      dispatch(cancelTranslation());
+    }
+    setTranslated(translated ? false : true);
   };
 
   const drawer = (
@@ -174,9 +198,28 @@ const Root = (props) => {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap component="div">
-              Responsive drawer
+              Gifts App
             </Typography>
-            <ImageAvatar />
+
+            {user_role === "elf" &&
+            window.location.pathname === "/child-page" ? (
+              <div style={{ display: "flex", gap: "12px" }}>
+                {elfStatus === "loading" ? (
+                  <CircularProgress
+                    sx={{ alignSelf: "center" }}
+                    color="error"
+                    size={30}
+                  />
+                ) : (
+                  <IconButton onClick={handleTranslateClick}>
+                    <GTranslateIcon />
+                  </IconButton>
+                )}
+                <ImageAvatar />
+              </div>
+            ) : (
+              <ImageAvatar />
+            )}
           </Toolbar>
         </AppBar>
       </ThemeProvider>
